@@ -1,10 +1,16 @@
 import express, { Request, Response } from 'express'
 import mongoose from "mongoose"
+import path from 'path'
 import dotenv from 'dotenv'
 import File from './models'
 dotenv.config()
 
 const app = express()
+
+// Middlewares
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+app.use(express.static('./client/build'))
 
 //MongoDB database
 const connectDB = async () => {
@@ -14,9 +20,9 @@ const connectDB = async () => {
 connectDB()
 
 // Routes
-app.get('/', (req: Request, res: Response) => {
-  console.log('Hello form home route!')
-  res.send('Hello form home route!')
+app.get('/home', (req: Request, res: Response) => {
+  console.log('Hello from home route!')
+  res.send('Hello from home route!')
 })
 
 app.get('/images', async (req: Request, res: Response) => {
@@ -28,6 +34,11 @@ app.get('/images', async (req: Request, res: Response) => {
   catch (error) {
     res.send(`error, something went wrong: ${error}`)
   } 
+})
+
+// This must be the last route otherwise it will block all other routes.
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "..", "client", "build", "index.html"))
 })
 
 const PORT = process.env.PORT || 5000;
