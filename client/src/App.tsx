@@ -16,7 +16,8 @@ function App() {
   }
 
   return (
-    <div className="App">      
+    <div className="App"> 
+    <h1>Azure GitHub Actions Demo</h1>     
       {fileNames.map((name, index)=>(
         <h3 key={index}>{name}</h3>
       ))}      
